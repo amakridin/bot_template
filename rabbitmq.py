@@ -2,10 +2,12 @@ import pika
 import requests
 from requests.auth import HTTPBasicAuth
 from typing import Any
+import config
 
 
 class Rabbitmq:
-    def __init__(self, host: str = "localhost", login: str = "guest", password: str = "guest"):
+    def __init__(self, host: str = config.RABBITMQ_SERVER,
+                 login: str = config.RABBITMQ_LOGIN, password: str = config.RABBITMQ_PASSWORD):
         self.__host = host
         self.__login = login
         self.__password = password
@@ -93,12 +95,12 @@ class Rabbitmq:
 
 
 if __name__ == "__main__":
-    with Rabbitmq(host='localhost', login='guest', password='guest') as rmq:
+    with Rabbitmq() as rmq:
         queue = 'common_in'
         # try:
         #     rmq.create_queue(queue=queue, ttl_hours=1)
         # except ValueError:
         #     pass
-        # rmq.send_to_queue(queue=queue, msg="hello")
+        rmq.send_to_queue(queue=queue, msg="hello")
         msg = rmq.get_awaiting_from_queue(queue)
         print(msg)
