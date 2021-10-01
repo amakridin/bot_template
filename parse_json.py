@@ -3,6 +3,11 @@ def parse_json(data):
     try:
         update_type = data['update_type']
         ret['update_type'] = update_type
+        if update_type == "bot_started":
+            ret['timestamp'] = data['timestamp']
+            ret['chat_id'] = data['chat_id']
+            ret['user_id'] = data['user']['user_id']
+            ret['user_name'] = data['user']['username']
         if update_type in ('message_callback', 'inline_keyboard'):
             ret['mid'] = data['message']['body']['mid']
             ret['text'] = data['message']['body']['text']
