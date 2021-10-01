@@ -5,6 +5,7 @@ import logging
 from ast import literal_eval
 from time import sleep
 import config
+from parse_json import parse_json
 
 
 class QueueMessagesHandler:
@@ -19,8 +20,11 @@ class QueueMessagesHandler:
                 threading.Thread(target=self.message_handler(literal_eval(message)))
 
     def message_handler(self, message: dict):
-        chat_id = message["message"]["recipient"]["chat_id"]
-        json_init = {"text": message["message"]["body"]["text"],
+        parsed_msg = parse_json(message)
+        chat_id = parsed_msg["chat_id"]
+        print(parsed_msg)
+        # here you can write your handler
+        json_init = {"text": str(parsed_msg),
                      "format": "markdown"}
         self.send_messages_to_queue({"chat_id": chat_id, "jsn": json_init})
 
